@@ -63,19 +63,16 @@ function csvToJson(csv_string) {
 // read food-list.csv file
 
 if (localStorage.getItem(FOOD_LIST_KEY) === null) {
-  /*
-  fetch("/food-list.csv")
-    .then((response) => response.text())
-    .catch((error) => (foodText = "Error"))
-    .then((text) => {
-      csvToJson(text);
-    });*/
-  //web상에서는 web link로 읽어서 에러 발생!!
-
-  fetch("../../food-list.csv")
-    .then((response) => response.text())
-    .catch((error) => (foodText = "Error"))
-    .then((text) => {
-      csvToJson(text);
-    });
+  let rawFile = new XMLHttpRequest();
+  const file = "/food-list.csv";
+  rawFile.open("GET", file, false);
+  rawFile.onreadystatechange = function () {
+    if (rawFile.readyState === 4) {
+      if (rawFile.status === 200 || rawFile.status == 0) {
+        var allText = rawFile.responseText;
+        csvToJson(allText);
+      }
+    }
+  };
+  rawFile.send(null);
 }
